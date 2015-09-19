@@ -32,6 +32,7 @@ Q = zeros(NumStates);       % Q matrices
 R = zeros(NumStates);       % Reward matrix
 A = zeros(NumRows,NumCols); % Agent
 
+
 rc_map=zeros(2,NumStates); %row/col
 
 i = 1:NumStates;
@@ -52,6 +53,8 @@ end
 Sfinal = NumRows*NumCols; %Reward in Last Array Location
 N(Sfinal,:)=0;            %Goal State has No Neighbors
 R(:,Sfinal) = 100;        %Reward of 100 in Goal State
+A(Sfinal)=10;
+A(1)=5;
 
 %------------------------------------------------------%
 %------------------------------------------------------%
@@ -60,7 +63,7 @@ R(:,Sfinal) = 100;        %Reward of 100 in Goal State
 for i =1:10000
     
     pause(0.001)
-    
+
     S1 = 1;
     
     while (S1 ~= Sfinal)
@@ -84,9 +87,7 @@ for i =1:10000
         
         S1 = S2;
         
-        
-        
-     
+       
 %------------------------------------------------------%        
 %------------------------------------------------------%         
 %Draw Agent Location Plot
@@ -94,27 +95,29 @@ for i =1:10000
         A(rc_map(1,S2),rc_map(2,S2)) = 1;
         
         subplot(131);
-        pcolor(padarray(A,[1,1],'post'))
+        imagesc(A(end:-1:1,:))
         title('Agent')
         axis off;
-                
+        pause(0.05)
+        
+        %Reset Agent Plot
         A(rc_map(1,S2),rc_map(2,S2)) = 0;
-
+        A(Sfinal)=10;
+        A(1)=5;
         
 %------------------------------------------------------%        
 %------------------------------------------------------%         
 %Draw Q Values Plot        
         
         subplot(132);
-        pcolor(Q)
+        imagesc(Q)
         title('Q Values')
         xlabel('State 2')
         ylabel('State 1')
         
         drawnow()
              
-
-        
+      
 %------------------------------------------------------%        
 %------------------------------------------------------%        
 %Draw Best Route        
@@ -136,7 +139,7 @@ for i =1:10000
             marker=marker+1;
             
             subplot(133);
-            pcolor(padarray(route,[1,1],'post'))
+            imagesc(route(end:-1:1,:))
             title('Best Route')
             
             
