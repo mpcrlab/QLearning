@@ -19,23 +19,45 @@ clear all
 close all
 clc
 
+% The Q and R matrices will have 7 rows each; This means there are 7 
+% different states the agent can be in if it were to travel up and down only.
 NumRows = 7;
+% There are 7 columns in the R matrix and Q matrix. If the agent were to travel 
+% only horizontally (left or right), it could be in 7 different states.
 NumCols = 7;
+% Given these two parameters, if up, down, right, and left movement is allowed,
+% there are 49 potential states the agent could be in. 
+% For this case, only one state will provide a reward. 
 
-G = 0.9; %gamma
-L = 0.7; %learning rate
+% This is the gamma, or learning parameter. 
+% Gamma has a range from 0 to 1. The closer it is to 1, the more future reward
+% will be considered when navigating through each state to find the reward state.
+% The closer it is to 0, the more immediate reward will be desired. 
+G = 0.9; 
+
+% Learning rate; can range from 0 (no learning) to 1 (only recent state transitions 
+% will be utilized when deciding which state to move to next. 
+L = 0.7; 
 epsilon = 0.4; %best option with chance (1-epsilon) else random
 
+% 49 possible states
 NumStates = NumRows*NumCols;
 
-Q = zeros(NumStates);       % Q matrices
-R = zeros(NumStates);       % Reward matrix
+% Q matrix contains all zeros (agent hasn't explored or reached the goal state yet, 
+% so it doesn't know which states and actions are more or less valuable. Nothing is 
+% known about the environment at this time, indicated by the zeros occupying the matrix. 
+Q = zeros(NumStates);      
+% The reward matrix is also filled with zeros, because the agent hasn't received a reward
+% and has no knowledge of what actions lead to rewards or where the reward is.
+R = zeros(NumStates);  
 A = zeros(NumRows,NumCols); % Agent
 
+% row/column; can move one state at a time. 
+rc_map=zeros(2,NumStates); 
 
-rc_map=zeros(2,NumStates); %row/col
-
+% Numbers each state 1-49
 i = 1:NumStates;
+
 rc_map(2,i) = ceil(i/NumCols);
 rc_map(1,i) = (i+NumRows)-(NumRows*rc_map(2,i));
 
