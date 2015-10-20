@@ -33,12 +33,12 @@ NumCols = 7;
 % Gamma has a range from 0 to 1. The closer it is to 1, the more future reward
 % will be considered when navigating through each state to find the reward state.
 % The closer it is to 0, the more immediate reward will be desired. 
-G = 0.9; 
+Gamma = 0.9; 
 
 % Learning rate; can range from 0 (no learning) to 1 (only recent state transitions 
 % will be utilized when deciding which state to move to next. 
-L = 0.7; 
-epsilon = 0.4; %best option with chance (1-epsilon) else random
+LearningRate = 0.7; 
+Epsilon = 0.4; %best option with chance (1-epsilon) else random
 
 % 49 possible states
 NumStates = NumRows*NumCols;
@@ -49,34 +49,34 @@ NumStates = NumRows*NumCols;
 Q = zeros(NumStates);      
 % The reward matrix is also filled with zeros, because the agent hasn't received a reward
 % and has no knowledge of what actions lead to rewards or where the reward is.
-R = zeros(NumStates);  
-A = zeros(NumRows,NumCols); % Agent
+RewardMatrix = zeros(NumStates);  
+AgentMatrixPlot = zeros(NumRows,NumCols); 
 
 % row/column; can move one state at a time. 
-rc_map=zeros(2,NumStates); 
+rowToColumn_map=zeros(2,NumStates); 
 
 % Numbers each state 1-49
 i = 1:NumStates;
 
-rc_map(2,i) = ceil(i/NumCols);
-rc_map(1,i) = (i+NumRows)-(NumRows*rc_map(2,i));
+rowToColumn_map(2,i) = ceil(i/NumCols);
+rowToColumn_map(1,i) = (i+NumRows)-(NumRows*rowToColumn_map(2,i));
 
-N = zeros(NumStates);  %Neighbors (1 for linked; 0 for unlinked)
+NeighbourMatrix = zeros(NumStates);  %Neighbors (1 for linked; 0 for unlinked)
 
 % allow linked states to be all neighbours including diagonal
 for i = 1:NumStates
     for j = 1:NumStates
-        if ((rc_map(2,j)-rc_map(2,i) < 2)&&(rc_map(2,j)-rc_map(2,i) > -2)&&(rc_map(1,j)-rc_map(1,i) < 2)&&(rc_map(1,j)-rc_map(1,i) > -2))&&((rc_map(2,j)~=rc_map(2,i))&&(rc_map(1,j)~=rc_map(1,i)))
-            N(i,j) = 1;
+        if ((rowToColumn_map(2,j)-rowToColumn_map(2,i) < 2)&&(rowToColumn_map(2,j)-rowToColumn_map(2,i) > -2)&&(rowToColumn_map(1,j)-rowToColumn_map(1,i) < 2)&&(rowToColumn_map(1,j)-rowToColumn_map(1,i) > -2))&&((rowToColumn_map(2,j)~=rowToColumn_map(2,i))&&(rowToColumn_map(1,j)~=rowToColumn_map(1,i)))
+            NeighbourMatrix(i,j) = 1;
         end
     end
 end
 
-Sfinal = NumRows*NumCols; %Reward in Last Array Location
-N(Sfinal,:)=0;            %Goal State has No Neighbors
-R(:,Sfinal) = 100;        %Reward of 100 in Goal State
-A(Sfinal)=10;
-A(1)=5;
+finalState = NumRows*NumCols;               % Reward in Last Array Location
+NeighbourMatrix(finalState,:)=0;            % Goal State has No Neighbors0
+RewardMatrix(:,finalState) = 100;            % Reward of 100 in Goal State0
+AgentMatrixPlot(finalState)=20;             % Draw reward on Agent plot with color 20
+AgentMatrixPlot(1)=5;                       % start point
 
 %------------------------------------------------------%
 %------------------------------------------------------%
@@ -86,47 +86,48 @@ for i =1:10000
     
     pause(0.001)
 
-    S1 = 1;
+    currentState = 1;
     
-    while (S1 ~= Sfinal)
-        
+    while (currentState ~= finalState) 
+        % Keep trying new states until we reach the final state
                
-        [S2QB,S2]=max(N(S1,:).*Q(S1,:));
+        [S2QB,nextState]=max(NeighbourMatrix(currentState,:).*Q(currentState,:));
+                    % get max matrix consisting of each NeighbourMatrix
+                    % element multiplied by each Q element 
+                    % http://www.astro.umd.edu/~cychen/MATLAB/ASTR310/Lab01/html/MoreVectors01.html
         
 
-        if (rand < (1-epsilon)) || (S2QB==0)
+        if (rand < (1-Epsilon)) || (S2QB==0)
             
-            S2 = randi([1, NumStates]);
+            nextState = randi([1, NumStates]); % Move random direction based on Q value
             
-            while N(S1,S2) == 0
-                S2 = randi([1, NumStates]);
+            while NeighbourMatrix(currentState,nextState) == 0
+                nextState = randi([1, NumStates]); % Current state has no path to the next state so randomly select a new next state
             end;
             
         end;
         
         
-        Q(S1,S2) = ((1-L)*Q(S1,S2)) + L*((R(S1,S2)+(G*(max(N(S2,:).*Q(S2,:))))));
+        Q(currentState,nextState) = ((1-LearningRate)*Q(currentState,nextState)) + LearningRate*((RewardMatrix(currentState,nextState)+(Gamma*(max(NeighbourMatrix(nextState,:).*Q(nextState,:))))));
         
-        S1 = S2;
+        currentState = nextState;
         
        
 %------------------------------------------------------%        
 %------------------------------------------------------%         
 %Draw Agent Location Plot
 
-        A(rc_map(1,S2),rc_map(2,S2)) = 1;
+        AgentMatrixPlot(rowToColumn_map(1,nextState),rowToColumn_map(2,nextState)) = 1;
         
         subplot(131);
-        imagesc(A(end:-1:1,:))
+        imagesc(AgentMatrixPlot(end:-1:1,:))
         title('Agent')
         axis off;
-        pause(0.05)
         
         %Reset Agent Plot
-        A(rc_map(1,S2),rc_map(2,S2)) = 0;
-        A(Sfinal)=10;
-        A(1)=5;
-        
+        AgentMatrixPlot(rowToColumn_map(1,nextState),rowToColumn_map(2,nextState)) = 0;                     
+        AgentMatrixPlot(finalState)=20;
+        AgentMatrixPlot(1)=5;
 %------------------------------------------------------%        
 %------------------------------------------------------%         
 %Draw Q Values Plot        
@@ -134,8 +135,8 @@ for i =1:10000
         subplot(132);
         imagesc(Q)
         title('Q Values')
-        xlabel('State 2')
-        ylabel('State 1')
+        xlabel('Next State')
+        ylabel('Current State')
         
         drawnow()
              
@@ -144,20 +145,20 @@ for i =1:10000
 %------------------------------------------------------%        
 %Draw Best Route        
 
-        S11 = 1;
+        currentBestState = 1;
         route = zeros(NumRows,NumCols);
         route(1,1)=1;
         marker=1;
         
-        [S2QB,S2QB2]=max(N(1,:).*Q(S11,:));
+        [S2QB,S2QB2]=max(NeighbourMatrix(1,:).*Q(currentBestState,:));
         
-        while (S2QB > 0)&&(S2QB2~=Sfinal)
+        while (S2QB > 0)&&(S2QB2~=finalState)
             
-            [S2QB,S2QB2]=max(N(S11,:).*Q(S11,:));
+            [S2QB,S2QB2]=max(NeighbourMatrix(currentBestState,:).*Q(currentBestState,:));
             
-            S11 = S2QB2;
+            currentBestState = S2QB2;
             
-            route(rc_map(1,S2QB2),rc_map(2,S2QB2)) = marker;
+            route(rowToColumn_map(1,S2QB2),rowToColumn_map(2,S2QB2)) = marker;
             marker=marker+1;
             
             subplot(133);
