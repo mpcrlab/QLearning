@@ -19,8 +19,8 @@ clear all
 close all
 clc
 
-NumRows = 7;
-NumCols = 7;
+NumRows = 16;
+NumCols = NumRows;
 
 G = 0.9; %gamma
 L = 0.7; %learning rate
@@ -114,7 +114,6 @@ for i =1:10000
         title('Q Values')
         xlabel('State 2')
         ylabel('State 1')
-        
         drawnow()
              
       
@@ -141,6 +140,7 @@ for i =1:10000
             subplot(133);
             imagesc(route(end:-1:1,:))
             title('Best Route')
+            
             
             
         end
