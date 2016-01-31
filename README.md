@@ -1,6 +1,6 @@
 # Q-Learning
 
-This repository contains Matlab scripts for Q-Learning using q-tables as well as Python code for Q-Learning with neural networks. To run the Python code, pull the repository, cd to the directory, and then run the test script:
+This repository contains Matlab scripts for Q-Learning using q-tables as well as Python code for Q-Learning with neural networks. Known dependencies for the Python code include (Theano)[http://deeplearning.net/software/theano/], (NumPy)[http://www.numpy.org/], (Lasagne)[https://github.com/Lasagne/Lasagne], and (Matplotlib)[http://matplotlib.org/faq/usage_faq.html]. To run the Python code, pull the repository, cd to the directory, and then run the test script:
 
 ```
 $ python test.py
