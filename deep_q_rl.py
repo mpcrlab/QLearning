@@ -6,6 +6,10 @@ import theano.tensor as t
 
 class DeepQLearner:
 
+    """
+    Creates a RL agent that learns to behave optimally.
+    """
+
     def __init__(
             self,
             input_width,
@@ -118,19 +122,28 @@ class DeepQLearner:
         return np.sqrt(loss)
 
     def q_vals(self, state):
+
         states = np.zeros((self.batch_size, 1, self.input_height,
                            self.input_width), dtype=theano.config.floatX)
         states[0, ...] = state
         self.states_shared.set_value(states)
+
         return self._q_vals()[0]
 
     def choose_action(self, state, epsilon):
+
         if self.rng.rand() < epsilon:
             return self.rng.randint(0, self.n_actions)
         q_vals = self.q_vals(state)
+
         return np.argmax(q_vals)
 
     def get_weights(self):
+
+        """
+        Gets the weights of the hidden layer for visualization and analysis.
+        :return: weights of the hidden layer
+        """
 
         weights = lasagne.layers.get_all_param_values(self.l_out)[0]
         return weights
