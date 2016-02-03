@@ -10,17 +10,17 @@ input_width = 5
 input_height = 5
 n_actions = 4
 discount = 0.9
-learn_rate = .01
+learn_rate = .001
 batch_size = 100
 rng = np.random
 replay_size = 1000
-max_iter = 1000
+max_iter = 10000
 epsilon = 0.2
 
 # generate the world
 world = World()
 
-# initialize replay memory D <s, a, r, s', t>
+# initialize replay memory D <s, a, r, s', t> to replay size with random policy
 print('Initializing replay memory D ... '),
 D = (
     np.zeros((replay_size, 1, input_height, input_width), dtype=theano.config.floatX),
@@ -111,11 +111,10 @@ while terminal == 0:
     path += state[0, 0, :, :]
 
     i += 1
-
-    if i == 20:
+    if i == 20 or reward == -1:
         print('fail :(')
 
-if np.sum(path)  == shortest_path:
+if np.sum(path) == shortest_path:
     print('success!')
 else:
     print('fail :(')
