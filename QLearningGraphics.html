@@ -1,0 +1,211 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Walkthrough of Example Trial</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-06-02"><meta name="DC.source" content="QLearningGraphics.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Walkthrough of Example Trial</h1><!--introduction--><p>This should be referenced in conjunction with MPCR_QLearningAction, which has the code and explanations along with it. This page contains screenshots of the agent and its world, as well as its Q table, throughout various stages of the program.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Initial World</a></li><li><a href="#3">First Make</a></li><li><a href="#5">Second Make</a></li><li><a href="#6">Third Make</a></li><li><a href="#7">Fourth Make</a></li><li><a href="#9">Fifth Make</a></li><li><a href="#11">Sixth Make</a></li><li><a href="#13">Seventh Make</a></li></ul></div><h2>Initial World<a name="1"></a></h2><p><img vspace="5" hspace="5" src="initial.png" alt=""> </p><p>This is the world before the agent has learned anything. It is an 8 by 8 grid with the bottom left turqoise rectangle as the starting location and the top right yellow rectangle as the final (reward) location. The agent is the blue rectangle and can move forwards, backwards, left, or right. At this point the agent knows nothing, so it is only taking random actions which leads it to various coordinates in the world.</p><p>To the right of the world are 4 Q tables, one for each possible action. The agent has not earned any reward yet, so the Q tables are empty. When it does reach the reward state, as we will soon see, it will have information as to what location will get it closer to the reward state and the Q table will have a new value.</p><h2>First Make<a name="3"></a></h2><p><img vspace="5" hspace="5" src="1stmake.png" alt=""> </p><p>This is the moment just after the agent reached the reward state. After it gets there, it resets back to the initial state and begins the process all over again. However now it has some more information which can be seen in the Q table. The agent arrived at the final state by taking random actions. By chance, it was at the location one unit below the final state and went forwards. That action resulted in a reward, so the agent learns that it is good to move forward in that location. That new information is shown in the corresponding location on the "forwards" Q table as a bright yellow rectangle. Bright yellow is a large Q value (close to the reward) and light blue is a low Q value, which will be seen later on. in the Q table The agent hasn't learned anything else though. It can only work backwards one state at a time. What this means is that if it reaches a state with some amount of a Q value, it recalls back what its previous state was and what action it took to get to its current location. Then it assigns a value in the corresponding Q table. The new value will be lower than the Q value for the state it is currently in because it is ultimately further away from the final reward state.</p><h2>Second Make<a name="5"></a></h2><p><img vspace="5" hspace="5" src="2ndmake.png" alt=""> </p><p>This is the moment shortly after the agent reached the reward state for the second time. Prior to the final action, the agent made random actions because, as with the previous time, it didn't have any information for most of its world. The agent happened to arrive at the location 2 units below the reward state and move forwards. This took it to (2,8), which it learned from the previous iteration that it has a high Q value. Again, the agent looks back on what it did to get there, which was move forward from (3,8), and it subsequently adds that information to its "forward" Q table. From (2,8) the agent will take the best action according to its Q table or it can take a random action based on the epsilon defined in the code. In this case the agent followed its Q table and moved forward.</p><h2>Third Make<a name="6"></a></h2><p><img vspace="5" hspace="5" src="3rd make.png" alt=""> </p><p>The agent continues to fill its Q table as it explores the world. In this case the agent moved left and right in the third row, filling in two spaces in the Q table. They are bright yellow because they are relatively close to the reward state. The Q value for moving forwards in (3,8) strengthened as well.</p><pre class="codeinput"><span class="comment">%Since it is only the third trial, the Q values are not very accurate.</span>
+<span class="comment">% For example, ideally the Q values in the third row should not be equal</span>
+<span class="comment">% to the value for (2,8), although the equal brightnesses indicates they</span>
+<span class="comment">% are.</span>
+</pre><h2>Fourth Make<a name="7"></a></h2><p><img vspace="5" hspace="5" src="4th make.png" alt=""> </p><p>This time the agent moved backwards at (2,8) by random action, which updated its Q table. Again, since it is very close to the reward state the Q value is large. The other Q values continue to be changed.</p><h2>Fifth Make<a name="9"></a></h2><p><img vspace="5" hspace="5" src="5th make.png" alt=""> </p><h2>Sixth Make<a name="11"></a></h2><p><img vspace="5" hspace="5" src="6th make.png" alt=""> </p><pre class="codeinput"><span class="comment">% The Q values further away from the final state are now being learned. At</span>
+<span class="comment">% first the agent can only update the values immediately prior to the</span>
+<span class="comment">% reward. Once those are learned, actions that take the agent to those</span>
+<span class="comment">% locations with known values can be used to fill the Q table at further</span>
+<span class="comment">% away locations.</span>
+</pre><h2>Seventh Make<a name="13"></a></h2><p><img vspace="5" hspace="5" src="7th make.png" alt=""> </p><p>At this point it'd be useful to clarify that the Q tables aren't updated after the reward has been reached. They are updated the moment the agent takes an action that results in it reaching a location with a known Q value. Each picture is taken just after the agent reaches the final state to show the progress made with each run through.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Walkthrough of Example Trial
+% This should be referenced in conjunction with MPCR_QLearningAction, which
+% has the code and explanations along with it.
+% This page contains screenshots of the agent and its world, as well as its
+% Q table, throughout various stages of the program.
+%% Initial World
+%%
+% 
+% <<initial.png>>
+% 
+% This is the world before the agent has learned anything. It is an 8 by 8
+% grid with the bottom left turqoise rectangle as the starting location and
+% the top right yellow rectangle as the final (reward) location.
+% The agent is the blue rectangle and can move forwards, backwards, left,
+% or right. At this point the agent knows nothing, so it is only taking
+% random actions which leads it to various coordinates in the world.
+%
+% To the right of the world are 4 Q tables, one for each possible action.
+% The agent has not earned any reward yet, so the Q tables are empty. When
+% it does reach the reward state, as we will soon see, it will have
+% information as to what location will get it closer to the reward state
+% and the Q table will have a new value.
+%% First Make
+%%
+% 
+% <<1stmake.png>>
+% 
+% This is the moment just after the agent reached the reward state. After
+% it gets there, it resets back to the initial state and begins the process
+% all over again.
+% However now it has some more information which can be seen in the Q
+% table. The agent arrived at the final state by taking random actions. By
+% chance, it was at the location one unit below the final state and went
+% forwards. That action resulted in a reward, so the agent learns that it
+% is good to move forward in that location. That new information is shown 
+% in the corresponding location on the "forwards" Q table as a bright
+% yellow rectangle. Bright yellow is a large Q value (close to the reward)
+% and light blue is a low Q value, which will be seen later on.
+% in the Q table
+% The agent hasn't learned anything else though. It can only work backwards
+% one state at a time. What this means is that if it reaches a state with
+% some amount of a Q value, it recalls back what its previous state was and
+% what action it took to get to its current location. Then it assigns a
+% value in the corresponding Q table. The new value will be lower than the 
+% Q value for the state it is currently in because it is ultimately further
+% away from the final reward state.
+
+%% Second Make
+% 
+% <<2ndmake.png>>
+% 
+% This is the moment shortly after the agent reached the reward state for
+% the second time. Prior to the final action, the agent made random
+% actions because, as with the previous time, it didn't have any
+% information for most of its world. The agent happened to arrive at the
+% location 2 units below the reward state and move forwards. This took it
+% to (2,8), which it learned from the previous iteration that it has a high
+% Q value. Again, the agent looks back on what it did to get there, which
+% was move forward from (3,8), and it subsequently adds that information 
+% to its "forward" Q table. 
+% From (2,8) the agent will take the best action according to its Q table
+% or it can take a random action based on the epsilon defined in the code.
+% In this case the agent followed its Q table and moved forward.
+%% Third Make
+% 
+% 
+% <<3rd make.png>>
+% 
+% The agent continues to fill its Q table as it explores the world. In this
+% case the agent moved left and right in the third row, filling in two
+% spaces in the Q table. They are bright yellow because they are relatively
+% close to the reward state. The Q value for moving forwards in (3,8)
+% strengthened as well. 
+%Since it is only the third trial, the Q values are not very accurate. 
+% For example, ideally the Q values in the third row should not be equal 
+% to the value for (2,8), although the equal brightnesses indicates they 
+% are.
+%% Fourth Make
+%%
+% 
+% <<4th make.png>>
+% 
+% This time the agent moved backwards at (2,8) by random action, which
+% updated its Q table. Again, since it is very close to the reward state
+% the Q value is large.
+% The other Q values continue to be changed.
+
+%% Fifth Make
+% 
+%%
+% 
+% <<5th make.png>>
+% 
+
+%% Sixth Make
+% 
+%%
+% 
+% <<6th make.png>>
+% 
+
+% The Q values further away from the final state are now being learned. At
+% first the agent can only update the values immediately prior to the
+% reward. Once those are learned, actions that take the agent to those 
+% locations with known values can be used to fill the Q table at further
+% away locations.
+
+%% Seventh Make
+%
+%%
+% 
+% <<7th make.png>>
+% 
+% At this point it'd be useful to clarify that the Q tables aren't updated
+% after the reward has been reached. They are updated the moment the agent
+% takes an action that results in it reaching a location with a known Q
+% value. Each picture is taken just after the agent reaches the final state
+% to show the progress made with each run through.
+
+
+
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
